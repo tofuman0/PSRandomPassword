@@ -56,7 +56,7 @@
          x            literial character e.g. abc
          {x}          Character count of range e.g. {3}.
 
-    Example: Get-RandomPassword -Type `"custom:[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol][symbol]`"
+    Example: Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol][symbol]`"
              Could generate a password of: !efyrEKS48-GHsR?!
 
  .EXAMPLE
@@ -78,7 +78,7 @@
   Get-RandomPassword -Type gibberish -Length 16
 
  .EXAMPLE
-  Get-RandomPassword -Type `"custom:[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol]{2}`""
+  Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol]{2}`""
 #>
 
 #region Default JSON File
@@ -277,7 +277,7 @@ function Get-RandomPassword {
             return $Passwords
         }
         elseif($Type -like "custom:*") {
-            $Expr = $Type.Replace("custom:", "")
+            $Expr = $Type.SubString(7)
         }
         else {
             if($Lower) {

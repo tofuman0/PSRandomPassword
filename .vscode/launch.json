@@ -8,7 +8,7 @@
             "name": "PowerShell: Launch Current File",
             "type": "PowerShell",
             "request": "launch",
-            "script": " Remove-Module RandomPassword; Import-Module ${file}; Get-RandomPassword -Type firewall;",
+            "script": " Remove-Module RandomPassword; Import-Module ${file}; Get-RandomPassword;",
             "args": []
         }
     ]

@@ -48,7 +48,7 @@
     Custom password allows you to specify a random password based on specified expression.
     Similar to regular expressions. This type ignores Length, Lower and Digit switches.
 
-    Usage: Get-RandomPassword -Type "custom:EXPR"
+    Usage: Get-RandomPassword -Type custom:"EXPR"
          [x-x]        Range of characters e.g. [0-9],[a-z],[a-Z].
          [x]          Type of characters e.g. [vowel],[consonant],[symbol].
                       [VOWEL] and [CONSONANT] will produce an uppercase character.
@@ -75,7 +75,7 @@
   Get-RandomPassword -Count 10 -Lower
 
  .EXAMPLE
-  Get-RandomPassword -Count 10 -Digit 0
+  Get-RandomPassword -Count 10 -Digits 0
     
  .EXAMPLE
   Get-RandomPassword -Type o365
@@ -541,7 +541,7 @@ function GeneratePasswords {
                                 }
                                 else {
                                     Write-Host "Alpha value: $($Element.Token) invalid. Ensure first alpha is lower in alphabetical and case order than the second alpha." -ForegroundColor Red
-                                    Exit 1
+                                    exit 1
                                 }
                             }
                         }

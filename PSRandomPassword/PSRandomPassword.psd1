@@ -3,7 +3,7 @@
 
 @{
 # Script module or binary module file associated with this manifest.
-RootModule = 'RandomPassword.psm1'
+RootModule = 'PSRandomPassword.psm1'
 
 # Version number of this module.
 ModuleVersion = '1.0'
@@ -30,7 +30,7 @@ VariablesToExport = '*'
 PrivateData = @{
     PSData = @{
         # Tags applied to this module. These help with module discovery in online galleries.
-        Tags = @('Password', 'Password Generator', 'Random Password')
+        Tags = @('Password', 'Password-Generator', 'Random-Password')
 
         # A URL to the main website for this project.
         ProjectUri = 'https://github.com/tofuman0/PSRandomPassword'

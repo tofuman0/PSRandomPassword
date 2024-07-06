@@ -59,7 +59,7 @@
 		 [random]     A random character.
          x            literial character e.g. abc
          {x}          Character count of range e.g. {3}.
-         {digit}      Character count set to digit value in JSON or if specified with -Digits.
+         {digits}     Character count set to digits value in JSON or if specified with -Digits.
          {length}     Character count set to length specified with -Length.
 
     Example: Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol][symbol]`"

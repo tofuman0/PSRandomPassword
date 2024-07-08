@@ -286,7 +286,7 @@ $DefaultJsonFile = "{
 }"
 #endregion
 
-$global:JsonTables = $null
+$JsonTables = $null
 
 function LoadJsonData {
     param(
@@ -578,7 +578,7 @@ function GeneratePasswords {
                         }
                         "SYMBOL" {
                             for($j = 0; $j -lt $Element.Count; $j++) {
-                                $Password += $global:JsonTables.symbols[(Get-Random -Maximum $global:JsonTables.symbols.Count)]
+                                $Password += $JsonTables.symbols[(Get-Random -Maximum $JsonTables.symbols.Count)]
                             }
                         }
                         "LITERIAL" {
@@ -597,16 +597,16 @@ function GeneratePasswords {
                                 $Word = ""
                                 switch ($Element.Case) {
                                     "LOWER" {
-                                        $Word = $global:JsonTables.first[(Get-Random -Maximum $global:JsonTables.first.Count)].ToLower()
+                                        $Word = $JsonTables.first[(Get-Random -Maximum $JsonTables.first.Count)].ToLower()
                                     }
                                     "UPPER" {
-                                        $Word = $global:JsonTables.first[(Get-Random -Maximum $global:JsonTables.first.Count)].ToUpper()
+                                        $Word = $JsonTables.first[(Get-Random -Maximum $JsonTables.first.Count)].ToUpper()
                                     }
                                     "PROPER" {
-                                        $Word = ((Get-Culture).TextInfo).ToTitleCase($global:JsonTables.first[(Get-Random -Maximum $global:JsonTables.first.Count)])
+                                        $Word = ((Get-Culture).TextInfo).ToTitleCase($JsonTables.first[(Get-Random -Maximum $JsonTables.first.Count)])
                                     }
                                     default {
-                                        $Word = $global:JsonTables.first[(Get-Random -Maximum $global:JsonTables.first.Count)]
+                                        $Word = $JsonTables.first[(Get-Random -Maximum $JsonTables.first.Count)]
                                     }
                                 }
                                 $Password += $Word
@@ -617,16 +617,16 @@ function GeneratePasswords {
                                 $Word = ""
                                 switch ($Element.Case) {
                                     "LOWER" {
-                                        $Word = $global:JsonTables.second[(Get-Random -Maximum $global:JsonTables.second.Count)].ToLower()
+                                        $Word = $JsonTables.second[(Get-Random -Maximum $JsonTables.second.Count)].ToLower()
                                     }
                                     "UPPER" {
-                                        $Word = $global:JsonTables.second[(Get-Random -Maximum $global:JsonTables.second.Count)].ToUpper()
+                                        $Word = $JsonTables.second[(Get-Random -Maximum $JsonTables.second.Count)].ToUpper()
                                     }
                                     "PROPER" {
-                                        $Word = ((Get-Culture).TextInfo).ToTitleCase($global:JsonTables.second[(Get-Random -Maximum $global:JsonTables.second.Count)])
+                                        $Word = ((Get-Culture).TextInfo).ToTitleCase($JsonTables.second[(Get-Random -Maximum $JsonTables.second.Count)])
                                     }
                                     default {
-                                        $Word = $global:JsonTables.second[(Get-Random -Maximum $global:JsonTables.second.Count)]
+                                        $Word = $JsonTables.second[(Get-Random -Maximum $JsonTables.second.Count)]
                                     }
                                 }
                                 $Password += $Word
@@ -688,7 +688,7 @@ function Get-RandomPassword {
 
         if($JsonFile -ne "") {
             if(Test-Path -Path $JsonFile) {
-                $global:JsonTables = LoadJsonData -JsonFile $JsonFile
+                $JsonTables = LoadJsonData -JsonFile $JsonFile
             }
             else {
                 Write-Host "Unable to load $JsonFile" -ForegroundColor Red
@@ -697,17 +697,17 @@ function Get-RandomPassword {
         }
         else {
             if(Test-Path -Path "$((Get-Location).Path)\randompassword.json") {
-                $global:JsonTables = LoadJsonData -JsonFile "$((Get-Location).Path)\randompassword.json"
+                $JsonTables = LoadJsonData -JsonFile "$((Get-Location).Path)\randompassword.json"
             }
             else {
-                $global:JsonTables = LoadJsonData -JsonData $DefaultJsonFile
+                $JsonTables = LoadJsonData -JsonData $DefaultJsonFile
             }
         }
 
-        if(($null -eq $global:JsonTables.digits) -or
-            ($null -eq $global:JsonTables.first) -or
-            ($null -eq $global:JsonTables.second) -or
-            ($null -eq $global:JsonTables.symbols)) {
+        if(($null -eq $JsonTables.digits) -or
+            ($null -eq $JsonTables.first) -or
+            ($null -eq $JsonTables.second) -or
+            ($null -eq $JsonTables.symbols)) {
             Write-Host "Malformed JSON file." -ForegroundColor Red
             exit 1
         }
@@ -715,15 +715,15 @@ function Get-RandomPassword {
         Get-Random -SetSeed $Seed | Out-Null
 
         if($Digits -ne -1) {
-            $global:JsonTables.digits = $Digits
+            $JsonTables.digits = $Digits
         }
 
         if($Type -like "custom:*") {
             $Expr = $Type.SubString(7)
         }
-        elseif($null -ne $global:JsonTables.passwordtypes -and
-              ($global:JsonTables.passwordtypes | Where-Object {$null -ne $_.$Type}).Count -ne 0) {
-            $Expr = $global:JsonTables.passwordtypes.$Type | Where-Object {$null -ne $_}
+        elseif($null -ne $JsonTables.passwordtypes -and
+              ($JsonTables.passwordtypes | Where-Object {$null -ne $_.$Type}).Count -ne 0) {
+            $Expr = $JsonTables.passwordtypes.$Type | Where-Object {$null -ne $_}
             if($Lower) {
                 $Expr = $Expr.ToLower()
             }
@@ -733,17 +733,17 @@ function Get-RandomPassword {
         }
         else {
             if($Lower) {
-                $Expr = "[word1][word2][0-9]{$($global:JsonTables.digits)}[symbol]"
+                $Expr = "[word1][word2][0-9]{$($JsonTables.digits)}[symbol]"
             }
             elseif($Upper) {
-                $Expr = "[WORD1][WORD2][0-9]{$($global:JsonTables.digits)}[symbol]"
+                $Expr = "[WORD1][WORD2][0-9]{$($JsonTables.digits)}[symbol]"
             }
             else {
-                $Expr = "[Word1][Word2][0-9]{$($global:JsonTables.digits)}[symbol]"
+                $Expr = "[Word1][Word2][0-9]{$($JsonTables.digits)}[symbol]"
             }
         }
 
-        $Passwords = GeneratePasswords -Expression $Expr -Count $Count -Length $Length -Digits $global:JsonTables.digits
+        $Passwords = GeneratePasswords -Expression $Expr -Count $Count -Length $Length -Digits $JsonTables.digits
         return $Passwords
     }
 }

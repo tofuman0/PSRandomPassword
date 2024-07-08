@@ -3,6 +3,12 @@ Random Password Power Shell Module
 
 A powershell module for generating random passwords<br />
 <br />
+### Install Module<br />
+Install-Module PSRandomPassword<br />
+<br />
+### Use Module<br />
+Get-RandomPassword [[-Count] <int>] [[-Type] <string>] [[-Length] <int>] [[-Digits] <int>] [[-Seed] <int>] [[-JsonFile] <string>] [-Lower] [-Upper] [-GenerateJson]<br />
+<br />
 It looks for "randompassword.json" in the same folder and if it exists it'll load the strings in that file instead of using<br />
 the hardcoded strings.<br />
 <br />

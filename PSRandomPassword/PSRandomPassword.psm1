@@ -1,92 +1,3 @@
-<#
- .SYNOPSIS
-  A basic random password generator.
-
- .DESCRIPTION
-  A random password generator which supports a selection of password types. It looks for "randompassword.json"
-  and if it exists it'll load the strings in that file instead of using the hardcoded strings.
-
- .PARAMETER Count
-  Number of passwords to generate.
-
- .PARAMETER Type
-  Types: standard, o365, gibberish, custom.
-         O365 password (3 letters 5 numbers).
-         Gibberish password (Random characters).
-         Custom password (similar to regex use Get-Help Get-RandomPassword -full for further help).
-         Additional types can be specified in the JSON
-
- .PARAMETER Length
-  Length of gibberish password.
-
- .PARAMETER Lower
-  Passwords to be all lowercase.
-
- .PARAMETER Upper
-  Passwords to be all uppercase.
-
- .PARAMETER Digits
-  Digit count in password. (100 limit).
-  
- .PARAMETER Seed
-  RNG Seed. Uses time by default.
-
- .PARAMETER JsonFile
-  Specify a JSON file to use instead of the default "randompassword.json".
-
- .PARAMETER Generatejson
-  Generates a default JSON file.
-
- .INPUTS
-  You can't pipe objects into Get-RandomPassword.
-
- .OUTPUTS
-  Returns a list of passwords as specified.
-
- .NOTES
-  Custom password:
-    Custom password allows you to specify a random password based on specified expression.
-    Similar to regular expressions. This type ignores Length, Lower and Digit switches.
-
-    Usage: Get-RandomPassword -Type custom:"EXPR"
-         [x-x]        Range of characters e.g. [0-9],[a-z],[a-Z].
-         [x]          Type of characters e.g. [vowel],[consonant],[symbol].
-                      [VOWEL] and [CONSONANT] will produce an uppercase character.
-         [word1]      Random word from first array. word1 will produce an lowercase word
-                      WORD1 an uppercase word and Word1 a propercase word.
-         [word2]      Random word from first array. word2 will produce an lowercase word
-                      WORD2 an uppercase word and Word2 a propercase word.
-         [random]     A random character.
-         x            literial character e.g. abc
-         {x}          Character count of range e.g. {3}.
-         {digits}     Character count set to digits value in JSON or if specified with -Digits.
-         {length}     Character count set to length specified with -Length.
-
-    Example: Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol][symbol]`"
-             Could generate a password of: !efyrEKS48-GHsR?!
-
- .EXAMPLE
-  Get-RandomPassword
-
- .EXAMPLE
-  Get-RandomPassword -Count 100
-
- .EXAMPLE
-  Get-RandomPassword -Count 10 -Lower
-
- .EXAMPLE
-  Get-RandomPassword -Count 10 -Digits 0
-    
- .EXAMPLE
-  Get-RandomPassword -Type o365
-
- .EXAMPLE
-  Get-RandomPassword -Type gibberish -Length 16
-
- .EXAMPLE
-  Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol]{2}`""
-#>
-
 #region Default JSON File
 $DefaultJsonFile = "{
     `"digits`" : 3,
@@ -651,6 +562,94 @@ function GeneratePasswords {
     }
 }
 
+<#
+ .SYNOPSIS
+  A basic random password generator.
+
+ .DESCRIPTION
+  A random password generator which supports a selection of password types. It looks for "randompassword.json"
+  and if it exists it'll load the strings in that file instead of using the hardcoded strings.
+
+ .PARAMETER Count
+  Number of passwords to generate.
+
+ .PARAMETER Type
+  Types: standard, o365, gibberish, custom.
+         O365 password (3 letters 5 numbers).
+         Gibberish password (Random characters).
+         Custom password (similar to regex use Get-Help Get-RandomPassword -full for further help).
+         Additional types can be specified in the JSON
+
+ .PARAMETER Length
+  Length of gibberish password.
+
+ .PARAMETER Lower
+  Passwords to be all lowercase.
+
+ .PARAMETER Upper
+  Passwords to be all uppercase.
+
+ .PARAMETER Digits
+  Digit count in password. (100 limit).
+  
+ .PARAMETER Seed
+  RNG Seed. Uses time by default.
+
+ .PARAMETER JsonFile
+  Specify a JSON file to use instead of the default "randompassword.json".
+
+ .PARAMETER Generatejson
+  Generates a default JSON file.
+
+ .INPUTS
+  You can't pipe objects into Get-RandomPassword.
+
+ .OUTPUTS
+  Returns a list of passwords as specified.
+
+ .NOTES
+  Custom password:
+    Custom password allows you to specify a random password based on specified expression.
+    Similar to regular expressions. This type ignores Length, Lower and Digit switches.
+
+    Usage: Get-RandomPassword -Type custom:"EXPR"
+         [x-x]        Range of characters e.g. [0-9],[a-z],[a-Z].
+         [x]          Type of characters e.g. [vowel],[consonant],[symbol].
+                      [VOWEL] and [CONSONANT] will produce an uppercase character.
+         [word1]      Random word from first array. word1 will produce an lowercase word
+                      WORD1 an uppercase word and Word1 a propercase word.
+         [word2]      Random word from first array. word2 will produce an lowercase word
+                      WORD2 an uppercase word and Word2 a propercase word.
+         [random]     A random character.
+         x            literial character e.g. abc
+         {x}          Character count of range e.g. {3}.
+         {digits}     Character count set to digits value in JSON or if specified with -Digits.
+         {length}     Character count set to length specified with -Length.
+
+    Example: Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol][symbol]`"
+             Could generate a password of: !efyrEKS48-GHsR?!
+
+ .EXAMPLE
+  Get-RandomPassword
+
+ .EXAMPLE
+  Get-RandomPassword -Count 100
+
+ .EXAMPLE
+  Get-RandomPassword -Count 10 -Lower
+
+ .EXAMPLE
+  Get-RandomPassword -Count 10 -Digits 0
+    
+ .EXAMPLE
+  Get-RandomPassword -Type o365
+
+ .EXAMPLE
+  Get-RandomPassword -Type gibberish -Length 16
+
+ .EXAMPLE
+  Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol]{2}`""
+#>
 function Get-RandomPassword {
     param(
         [ValidateRange(1,1000)]

@@ -452,7 +452,7 @@ function GeneratePasswords {
                                 }
                                 else {
                                     Write-Host "Alpha value: $($Element.Token) invalid. Ensure first alpha is lower in alphabetical and case order than the second alpha." -ForegroundColor Red
-                                    exit 1
+                                    return
                                 }
                             }
                         }
@@ -671,17 +671,17 @@ function Get-RandomPassword {
         $Passwords = @()
         if($Lower -and $Upper) {
             Write-Host "You can only use either -Lower or -Upper. Not both." -ForegroundColor Red
-            exit 1
+            return
         }
 
         if($GenerateJson) {
             New-Item -Path .\randompassword.json -Value $DefaultJsonFile -Force -ErrorVariable res | Out-Null
             if(!$res) {
                 Write-Host "randompassword.json created."
-                exit 0
+                return
             }
             else {
-                exit 1
+                return
             }
         }
 
@@ -691,7 +691,7 @@ function Get-RandomPassword {
             }
             else {
                 Write-Host "Unable to load $JsonFile" -ForegroundColor Red
-                exit 1
+                return
             }
         }
         else {
@@ -708,7 +708,7 @@ function Get-RandomPassword {
             ($null -eq $JsonTables.second) -or
             ($null -eq $JsonTables.symbols)) {
             Write-Host "Malformed JSON file." -ForegroundColor Red
-            exit 1
+            return
         }
 
         Get-Random -SetSeed $Seed | Out-Null

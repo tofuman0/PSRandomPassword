@@ -1,7 +1,7 @@
 #region Default JSON File
 $DefaultJsonFile = "{
     `"digits`" : 3,
-    `"first`" : [
+    `"word1`" : [
         `"accidentally`",
         `"accordingly`",
         `"additionally`",
@@ -84,7 +84,7 @@ $DefaultJsonFile = "{
         `"well`",
         `"yesterday`"
     ],
-    `"second`" : [
+    `"word2`" : [
         `"adventurous`",
         `"alert`",
         `"alive`",
@@ -337,6 +337,7 @@ function GeneratePasswords {
                                 Count = $ElementCount
                             }
                         }
+                        <#
                         elseif($ElementValue -ceq "word1") {
                             $Elements += [PSCustomObject]@{
                                 Type = "WORD1"
@@ -385,6 +386,7 @@ function GeneratePasswords {
                                 Count = $ElementCount
                             }
                         }
+                        #>
                         else {
                             if($ElementValue.IndexOf("-") -ne -1) {
                                 if($ElementValue[0] -cmatch "[A-z]") {
@@ -400,6 +402,32 @@ function GeneratePasswords {
                                         Type = "NUMERIC"
                                         Token = $ElementValue
                                         Case = "NA"
+                                        Count = $ElementCount
+                                    }
+                                }
+                            }
+                            else {
+                                if($ElementValue -cmatch "^[^A-Z]*$") {
+                                    $Elements += [PSCustomObject]@{
+                                        Type = $ElementValue
+                                        Token = $null
+                                        Case = "LOWER"
+                                        Count = $ElementCount
+                                    }
+                                }
+                                elseif($ElementValue -cmatch "^[^a-z]*$") {
+                                    $Elements += [PSCustomObject]@{
+                                        Type = $ElementValue
+                                        Token = $null
+                                        Case = "UPPER"
+                                        Count = $ElementCount
+                                    }
+                                }
+                                elseif($ElementValue[0] -cmatch "^[A-Z]*$" -and $ElementValue.Substring(1) -cmatch "^[^A-Z]*$") {
+                                    $Elements += [PSCustomObject]@{
+                                        Type = $ElementValue
+                                        Token = $null
+                                        Case = "PROPER"
                                         Count = $ElementCount
                                     }
                                 }
@@ -503,6 +531,7 @@ function GeneratePasswords {
                                 $Password += $CharMap[(Get-Random -Maximum 78)]
                             }
                         }
+                        <#
                         "WORD1" {
                             for($j = 0; $j -lt $Element.Count; $j++) {
                                 $Word = ""
@@ -543,9 +572,29 @@ function GeneratePasswords {
                                 $Password += $Word
                             }
                         }
+                        #>
                         default {
+                            if($null -eq $JsonTables.$($Element.Type)) {
+                                Throw "$($Element.Type) array missing from JSON file."
+                                return $null
+                            }
                             for($j = 0; $j -lt $Element.Count; $j++) {
-                                $Password += "?"
+                                $Word = ""
+                                switch ($Element.Case) {
+                                    "LOWER" {
+                                        $Word = $JsonTables.$($Element.Type)[(Get-Random -Maximum $JsonTables.$($Element.Type).Count)].ToLower()
+                                    }
+                                    "UPPER" {
+                                        $Word = $JsonTables.$($Element.Type)[(Get-Random -Maximum $JsonTables.$($Element.Type).Count)].ToUpper()
+                                    }
+                                    "PROPER" {
+                                        $Word = ((Get-Culture).TextInfo).ToTitleCase($JsonTables.$($Element.Type)[(Get-Random -Maximum $JsonTables.$($Element.Type).Count)])
+                                    }
+                                    default {
+                                        $Word = $JsonTables.$($Element.Type)[(Get-Random -Maximum $JsonTables.$($Element.Type).Count)]
+                                    }
+                                }
+                                $Password += $Word
                             }
                         }
                     }
@@ -616,10 +665,10 @@ function GeneratePasswords {
          [x-x]        Range of characters e.g. [0-9],[a-z],[a-Z].
          [x]          Type of characters e.g. [vowel],[consonant],[symbol].
                       [VOWEL] and [CONSONANT] will produce an uppercase character.
-         [word1]      Random word from first array. word1 will produce an lowercase word
-                      WORD1 an uppercase word and Word1 a propercase word.
-         [word2]      Random word from first array. word2 will produce an lowercase word
-                      WORD2 an uppercase word and Word2 a propercase word.
+         [arrayname]  Random word from a specified array. There are 2 mandatory arrays in the
+                      JSON file, Word1 and Word2 you can create your own arrays for example "colours"
+                      and populate the array with the colour names. word1 will produce a lowercase word
+                      WORD1 an uppercase word and Word1 a propercase word from the named array.
          [random]     A random character.
          x            literial character e.g. abc
          {x}          Character count of range e.g. {3}.
@@ -649,6 +698,9 @@ function GeneratePasswords {
 
  .EXAMPLE
   Get-RandomPassword -Type custom:`"[symbol][a-z]{4}[A-Z]{3}[0-9]{2}-[a-Z]{4}[symbol]{2}`""
+
+  .EXAMPLE
+  Get-RandomPassword -Type custom:`"[colours]{4}[0-9]{2}`""
 #>
 function Get-RandomPassword {
     param(
@@ -704,8 +756,8 @@ function Get-RandomPassword {
         }
 
         if(($null -eq $JsonTables.digits) -or
-            ($null -eq $JsonTables.first) -or
-            ($null -eq $JsonTables.second) -or
+            ($null -eq $JsonTables.word1) -or
+            ($null -eq $JsonTables.word2) -or
             ($null -eq $JsonTables.symbols)) {
             Write-Host "Malformed JSON file." -ForegroundColor Red
             return

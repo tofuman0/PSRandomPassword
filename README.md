@@ -15,11 +15,11 @@ the hardcoded strings.<br />
 basic json file structure:<br />
 {<br />
 &nbsp;&nbsp;&nbsp;&nbsp;"digits" : 3,<br />
-&nbsp;&nbsp;&nbsp;&nbsp;"first" : [<br />
+&nbsp;&nbsp;&nbsp;&nbsp;"word1" : [<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"firstwords",<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"..."<br />
 &nbsp;&nbsp;&nbsp;&nbsp;],<br />
-&nbsp;&nbsp;&nbsp;&nbsp;"second" : [<br />
+&nbsp;&nbsp;&nbsp;&nbsp;"word2" : [<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"secondwords",<br />
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"..."<br />
 &nbsp;&nbsp;&nbsp;&nbsp;],<br />
@@ -62,10 +62,10 @@ Custom password:
         [x-x]        Range of characters e.g. [0-9],[a-z],[a-Z].
         [x]          Type of characters e.g. [vowel],[consonant],[symbol].
                      [VOWEL] and [CONSONANT] will produce an uppercase character.
-        [word1]      Random word from first array. word1 will produce an lowercase word
-                     WORD1 an uppercase word and Word1 a propercase word.
-        [word2]      Random word from first array. word2 will produce an lowercase word
-                     WORD2 an uppercase word and Word2 a propercase word.
+        [arrayname]  Random word from a specified array. There are 2 mandatory arrays in the
+                     JSON file, Word1 and Word2 you can create your own arrays for example "colours"
+                     and populate the array with the colour names. word1 will produce a lowercase word
+                     WORD1 an uppercase word and Word1 a propercase word from the named array.
         [random]     A random character.
         x            literial character e.g. abc
         {x}          Character count of range e.g. {3}.
